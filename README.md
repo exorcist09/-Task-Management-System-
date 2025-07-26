@@ -196,7 +196,7 @@ Response
 
 ```
 
-### Delete Task
+### 6. Delete Task
 
 <b><i> DELETE /tasks/:id</i></b>
 
