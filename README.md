@@ -1,8 +1,8 @@
 # ✅ Task Management System API
 
-### <b>Built with Node.js, Express.js, TypeScript, Zod, Swagger, and SQLite (via Prisma ORM)</b>
+### <b>Built with Node.js, Express.js, TypeScript, Zod, Swagger, and in-memory data store (Array of Tasks) </b>
 
-A robust, RESTful Task Management API  which allows users to create, read, update, delete, and filter tasks with support for pagination, validation, and OpenAPI (Swagger) documentation 
+A robust, RESTful Task Management API  which allows users to create, read, update, delete, and filter tasks with support for pagination, validation, and Swagger documentation 
 
 ---
 
@@ -12,8 +12,6 @@ A robust, RESTful Task Management API  which allows users to create, read, updat
 | ------------------------ | ------------------------------------ |
 | **Node.js + Express.js** | Backend server framework             |
 | **TypeScript**           | Strong typing and better tooling     |
-| **SQLite**                | Lightweight database for task storage |
-| **Prisma ORM**           | Simplified and type-safe DB access   |
 | **Zod**                  | Schema validation for request bodies |
 | **Swagger UI**           | Interactive API documentation        |
 | **uuid**                 | Unique IDs for tasks                 |
@@ -48,53 +46,43 @@ A robust, RESTful Task Management API  which allows users to create, read, updat
 
 ---
 
-## ⚙️ Setup & Run Instructions
+## ⚙️ Setup & Run Locally Instructions
+
+✅ Prerequisites
+
+    Node.js ≥ 18.x
+
+    npm ≥ 9.x
 
 ###  1. Clone the repository
 
 ```bash
-git clone https://github.com/exorcist09/task-manager-api
-cd task-manager-api
+git clone https://github.com/exorcist09/task-management-system.git
+cd task-manager-system
 ```
-
 
 ###  2. Install dependencies
 ```
 npm install
 ```
 
-### 3. Setup Environment
-```
-Create a .env file in the root with:
-DATABASE_URL="mysql://username:password@localhost:3306/taskdb"
-```
-
-### 4. Initialize Prisma and Database
-```
-npx prisma migrate dev --name init
-npx prisma generate
-```
-
-This will create the required tasks table in your MySQL database.
-
-### 5. Run the app
+### 3. Run the app
 
 ```
 npm run dev
 Server will start on http://localhost:3000
 ```
+<b>Note:</b> This port can change in vscode according to your setting or if it is busy, refer to the port which is shown in terminal when the above command in executed
 
-### 6. View Swagger API Docs
-
+### 4. View Swagger API Docs
 ```
 Visit:
-http://localhost:3000/api-docs
+http://localhost:3000/docs
 ```
 
 
-## ⚙️ API Endpoints
+## ⚙️ API Endpoints and Example Request/Responses
 
-All routes are prefixed under `/api`.
 
 | Endpoint         | Method | Description                             |
 | ---------------- | ------ | --------------------------------------- |
@@ -104,36 +92,126 @@ All routes are prefixed under `/api`.
 | `/tasks/:id` | PUT    | Update a task                           |
 | `/tasks/:id` | DELETE | Delete a task                           |
 | `/tasks?page=1&limit=5&status=IN_PROGRESS` | GET | Pagination | 
-
-
 ---
-
-## ⚙️ Features Implemented
-
-- ✅ **CRUD operations** for task management
-- ✅ **MySQL database** (via Prisma)
-- ✅ **Pagination & Filtering** on GET `/tasks`
-- ✅ **Input validation** using **Zod**
-- ✅ **Swagger/OpenAPI** interactive docs
-- ✅ **Proper folder structure** and clean code
-- ✅ **ESLint + Prettier** for code quality
-
+<b>Preferrable use POSTMAN or THUNDERCLIENT for this Api Testing </b>
 ---
+### 1. Create Task 
 
-## ⚙️ Task Object Structure
+<b><i>POST /tasks </i></b>
 
-```json
+Request body
+
+```
+{
+  "title": "Write something",
+  "description": "Complete the section",
+  "status": "PENDING"
+}
+
+```
+
+Response :
+```
 {
   "id": "uuid",
-  "title": "string",
-  "description": "string",
-  "status": "PENDING | IN_PROGRESS | COMPLETED",
+  "title": "Write something",
+  "description": "Complete the section",
+  "status": "PENDING",
   "createdAt": "timestamp",
   "updatedAt": "timestamp"
 }
+
 ```
 
-## ⚙️ Query Parameters for `/tasks`
+### 2. Get Tasks (Pagination + Filter)
+
+```
+ GET /tasks?page=1&limit=5&status=IN_PROGRESS
+```
+
+### 3. Get all Tasks
+
+<b><i>GET /tasks?page=1&limit=5&status=IN_PROGRESS&title=read </i></b>
+
+Response
+```
+{
+  "page": 1,
+  "limit": 5,
+  "total": 1,
+  "tasks": [
+    {
+      "id": "uuid",
+      "title": "Read a book",
+      "description": "Finish reading notes",
+      "status": "IN_PROGRESS",
+      "createdAt": "timestamp",
+      "updatedAt": "timestamp"
+    }
+  ]
+}
+
+```
+
+### 4. Get task By ID
+
+<b><i>Get /tasks/:id</i></b>
+
+Response
+```
+{
+  "id": "uuid",
+  "title": "Read a book",
+  "description": "Finish reading notes",
+  "status": "IN_PROGRESS",
+  "createdAt": "timestamp",
+  "updatedAt": "timestamp"
+}
+
+```
+
+### 5.  Update task
+
+<b><i>PUT /tasks/:id
+Request body</i></b>
+```
+{
+  "title": "Read a book",
+  "description": "Read a novel",
+  "status": "COMPLETED"
+}
+
+```
+
+Response
+```
+{
+  "id": "uuid",
+  "title": "Read a book",
+  "description": "Read a novel",
+  "status": "COMPLETED",
+  "createdAt": "timestamp",
+  "updatedAt": "timestamp"
+}
+
+```
+
+### Delete Task
+
+<b><i> DELETE /tasks/:id</i></b>
+
+Response
+```
+{
+  "message": "Task deleted successfully"
+}
+```
+
+---
+
+
+
+### ⚙️ Query Parameters for `/tasks`
 
 | Param    | Type   | Description                        |
 | -------- | ------ | ---------------------------------- |
@@ -144,53 +222,24 @@ All routes are prefixed under `/api`.
 
 ---
 
-## ⚙️ Example API Usage
-
-### Create Task:
-
+## ⚙️ Code Formating
 ```
-http
-POST /api/tasks
-Content-Type: application/json
-
-{
-  "title": "Write README",
-  "description": "Complete the documentation",
-  "status": "PENDING"
-}
+npx prettier --write .
+npx eslint . --fix
 ```
 
-
-## Get Tasks (Pagination + Filter):
-```
- GET /api/tasks?page=1&limit=5&status=IN_PROGRESS
-```
+<b>Note:</b>  you need to use run this prettier command if you have a Prettier Extention in your VSCode you can just use Shortcut(ctrl+Shift+I) or just click on Prettier icon on the Status Bar
 
 
-## 📦 Prisma Schema (Reference)
-```
-model Task {
-  id          String   @id @default(uuid())
-  title       String
-  description String
-  status      Status
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
 
-enum Status {
-  PENDING
-  IN_PROGRESS
-  COMPLETED
-}
-```
+## ⚙️ Features Implemented
 
-## ⚙️ Troubleshooting
+- ✅ **CRUD operations** for task management
+- ✅ **Pagination & Filtering** on GET `/tasks`
+- ✅ **In-Memory data Storage** of tasks
+- ✅ **Input validation** using **Zod**
+- ✅ **Swagger** interactive docs
+- ✅ **Proper folder structure** and clean code
+- ✅ **ESLint + Prettier** for code quality
 
-```
-    ❗ Error: Can't connect to database
-    Make sure MySQL is running and credentials are correct in .env
 
-    ❗ Swagger page not loading?
-    Check if server is running on localhost:3000
-```
