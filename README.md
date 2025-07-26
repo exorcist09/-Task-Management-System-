@@ -131,7 +131,7 @@ Response :
 
 ### 3. Get all Tasks
 
-<b><i>GET /tasks?page=1&limit=5&status=IN_PROGRESS&title=read </i></b>
+<b><i>GET /tasks </i></b>
 
 Response
 ```
