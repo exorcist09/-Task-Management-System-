@@ -1,9 +1,9 @@
 export const swaggerOptions = {
   openapi: '3.0.0',
   info: {
-    title: 'Task Manager API',
-    version: '1.0.0',
-    description: 'A simple REST API for managing tasks',
+    title: 'Task Management System',
+    // version: '1.0.0',
+    description: 'A REST API for managing tasks',
   },
   paths: {
     '/tasks': {
